@@ -1,6 +1,6 @@
 
 const getTree = (obj, count = 0) => {
-    console.log('--'.repeat(count) + obj.name)
+    console.log('  '.repeat(count) + '└─' + obj.name)
     if (obj.items && obj.items.length) {
         count += 1;
         obj.items.forEach(item => {
