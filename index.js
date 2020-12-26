@@ -25,7 +25,7 @@ const getTree = (obj, count = 0) => {
 }
 // get files and fiolders tree
 var getFiles = function (dir, depth = 2, count = 0){
-    console.log('  '.repeat(count) + '└─' + dir);
+    console.log('|  '.repeat(count) + '└─' + dir);
     if (fs.statSync(dir).isDirectory()) {
         count += 1;
         let files = fs.readdirSync(dir);
