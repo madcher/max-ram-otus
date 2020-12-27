@@ -1,6 +1,17 @@
 
 var fs = require('fs');
 var path = require('path');
+//let depth = Number(process.argv[2].replace(/\D+/g,""));
+//let depth = process.argv[3]
+const args = process.argv.slice(2);
+// массив аргументов
+const depthIndex = args.findIndex(el => el === '-d');
+// глубина дерева
+let depth;
+if (depthIndex >= 0 && args[depthIndex + 1]) {
+    depth = args[depthIndex + 1];
+}
+
 // test object
 const testObj = {
     "name": 1,
@@ -40,7 +51,7 @@ var getFiles = function (dir, depth = 2, count = 0){
 };
 
 getTree(testObj);
-getFiles('./');
+getFiles('./', depth);
 
 module.exports.getTree;
 module.exports.getFiles;
