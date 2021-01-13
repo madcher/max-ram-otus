@@ -47,11 +47,31 @@ var getFiles = function (dir, depth = 2, count = 0){
             }
         })
     }
-    return;
 };
 
-getTree(testObj);
-getFiles('./', depth);
+const asyncGetFiles = function (dir, depth = 2, count = 0) {
+    console.log('|  '.repeat(count) + '└─' + dir);
+    fs.stat(dir, (err, stats) => {
+        if (err) {
+            return;
+        }
+        if (stats.isDirectory()) {
+            count += 1;
+            let files = fs.readdirSync(dir);
+            files.forEach(file => {
+                var name = dir + '/' + file;
+                if (count <= depth) {
+                    return getFiles(name, depth, count);
+                }
+            })
+        }
+    })
+};
+
+
+//getTree(testObj);
+//getFiles('./', depth);
+asyncGetFiles('./', depth);
 
 module.exports.getTree;
 module.exports.getFiles;
