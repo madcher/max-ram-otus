@@ -1,0 +1,23 @@
+{
+  "name": "get-tree",
+  "version": "1.0.0",
+  "description": "getting tree structure from object",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "params": "node index.js -- ./ -d 4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madcher/max-ram-otus.git"
+  },
+  "keywords": [
+    "tree"
+  ],
+  "author": "Maxim Rameev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madcher/max-ram-otus/issues"
+  },
+  "homepage": "https://github.com/madcher/max-ram-otus#readme"
+}
