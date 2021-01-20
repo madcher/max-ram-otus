@@ -35,7 +35,7 @@ for (let i = 1; i <= 10; i++) {
     streams[`readable${i}`].on('data', chunkHandler);
 };
 
-readable10.on('end', () => {
+streams.readable10.on('end', async () => {
     array.sort();
     for (let num in array) {
         if(!file.write(num)) {
