@@ -32,3 +32,13 @@ readable.on('data', async (chunk) => {
     }
     readable.resume();
 });
+
+streams.readable10.on('end', async () => {
+    array.sort();
+    for (let num in array) {
+        if(!file.write(num)) {
+            await new Promise(resolve => file.once('drain', resolve));
+        }
+    }
+    console.log('ready');
+  });
