@@ -11,8 +11,11 @@ const chunkHandler = async (chunk) => {
         streams[stream].pause();
     }
     array.push(chunk.toString());
-    array.sort();
-    const num = array.shift();
+    let num;
+    if (array.length >= 10) {
+        array.sort();
+        num = array.shift();
+    }
     if (!num) {
         for (let stream in streams){
             streams[stream].resume();
@@ -32,3 +35,12 @@ for (let i = 1; i <= 10; i++) {
     streams[`readable${i}`].on('data', chunkHandler);
 };
 
+readable10.on('end', () => {
+    array.sort();
+    for (let num in array) {
+        if(!file.write(num)) {
+            await new Promise(resolve => file.once('drain', resolve));
+        }
+    }
+    console.log('ready');
+  });
