@@ -4,7 +4,7 @@
   "description": "getting tree structure from object",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "params": "node index.js -- ./ -d 4"
   },
   "repository": {
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/madcher/max-ram-otus/issues"
   },
-  "homepage": "https://github.com/madcher/max-ram-otus#readme"
+  "homepage": "https://github.com/madcher/max-ram-otus#readme",
+  "dependencies": {
+    "jest": "^26.6.3"
+  }
 }

@@ -25,29 +25,39 @@ const testObj = {
     ]
 };
 // get tree from object
-const getTree = (obj, count = 0) => {
-    console.log('  '.repeat(count) + '└─' + obj.name)
-    if (obj.items && obj.items.length) {
-        count += 1;
-        obj.items.forEach(item => {
-            return getTree(item, count);
-        })
-    } 
+const getTree = (obj) => {
+    let str = ''
+    const treeCycle = (obj, count = 0) => {
+        str += '  '.repeat(count) + '└─' + obj.name + '\n';
+        if (obj.items && obj.items.length) {
+            count += 1;
+            obj.items.forEach(item => {
+                return treeCycle(item, count);
+            })
+        } 
+    }
+    treeCycle(obj);
+    return str;
 }
 // get files and fiolders tree
-var getFiles = function (dir, depth = 2, count = 0){
-    console.log('|  '.repeat(count) + '└─' + dir);
-    if (fs.statSync(dir).isDirectory()) {
-        count += 1;
-        let files = fs.readdirSync(dir);
-        files.forEach(file => {
-            var name = dir + '/' + file;
-            if (count <= depth) {
-                return getFiles(name, depth, count);
-            }
-        })
-    }
-};
+const getFiles = (dir, depth = 2) => {
+    let str = '';
+    const getFilesCycle = function (dir, depth = 2, count = 0){
+        str += '|  '.repeat(count) + '└─' + dir + '\n';
+        if (fs.statSync(dir).isDirectory()) {
+            count += 1;
+            let files = fs.readdirSync(dir);
+            files.forEach(file => {
+                var name = dir + '/' + file;
+                if (count <= depth) {
+                    return getFilesCycle(name, depth, count);
+                }
+            })
+        }
+    };
+    getFilesCycle(dir, depth);
+    return str;
+}
 
 const asyncGetFiles = function (dir, depth = 2, count = 0) {
     console.log('|  '.repeat(count) + '└─' + dir);
@@ -69,9 +79,13 @@ const asyncGetFiles = function (dir, depth = 2, count = 0) {
 };
 
 
-//getTree(testObj);
-//getFiles('./', depth);
-asyncGetFiles('./', depth);
+//console.log(getTree(testObj));
+console.log(getFiles('./', depth))
+//asyncGetFiles('./', depth);
 
-module.exports.getTree;
-module.exports.getFiles;
+module.exports = {
+    getTree,
+    getFiles,
+    testObj,
+    asyncGetFiles,
+}
