@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+
+        <script type="text/babel">
+
+            // шапка страницы
+            const Header = () => {
+                return (
+                    <div className="header">
+                        <div className="header__label">my-courses</div>
+                        <div><button className="header__logout" onClick={() => {}}>Log out</button></div>
+                    </div>
+                );
+            }
+            // содержания страницы
+            const Content = () => {
+                React.useEffect(() => {
+                    if (window.Worker) {
+                        const myWorker = new Worker("worker.js");
+                        const message = { addThis: {num1: 1, num2: 10} };
+                        myWorker.postMessage(message);
+                        myWorker.onmessage = ({data}) => {
+                            const {error, hint, message} = data;
+                            if (error) {
+                                alert(error);
+                            }
+                            if (hint) {
+                                console.log(hint);
+                            }
+                            if (message) {
+                                console.log(message);
+                                // создаем уведомление
+                                if (Notification.permission === "granted") {
+                                    // Если разрешено, то создаем уведомление
+                                    var notification = new Notification(message);
+                                } else if (Notification.permission !== 'denied') {
+                                    Notification.requestPermission(function (permission) {
+                                        // Если пользователь разрешил, то создаем уведомление
+                                        if (permission === "granted") {
+                                            var notification = new Notification(message);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }, []);
+
+                return (
+                    <div className="content">
+                        <div>Hello world !</div>
+                        <button type="button" className="auth__input auth_button" onClick={() => {}}>Add course</button>
+                    </div>
+                );
+            }
+
+
+            // компонент приложения
+            const App = () => {
+                return(<div>
+                        <Header/>
+                        <Content/>
+                    </div>);
+            }
+
+
+            ReactDOM.render(<App />, document.querySelector('#container'));
+        </script>
+    </body>
+</html>
