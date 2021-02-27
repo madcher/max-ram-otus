@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="./service.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+
+        <script type="text/babel">
+
+
+            // страница авторизации
+            const Auth = ({setToken}) => {
+                const [error, setError] = React.useState(false);
+                const submitHandler = (e) => {
+                    loginFunc(e, setToken, setError)
+                };
+
+                return(<div className="auth__container">
+                        <form className="auth__form" onSubmit={submitHandler}>
+                            <label className="auth__label">Login</label>
+                            <input className="auth__input" type="text" placeholder="login" name="login"/>
+                            <label className="auth__label">Password</label>
+                            <input className="auth__input" type="password" placeholder="" name="password"/>
+                            {error && <div className="auth_error">Invalid login or password</div>}
+                            <button type="submit" className="auth__input auth_button">Submit</button>
+                        </form>
+                    </div>);
+            }
+
+
+            // шапка страницы
+            const Header = ({setToken}) => {
+                return (
+                    <div className="header">
+                        <div className="header__label">my-courses</div>
+                        <div><button className="header__logout" onClick={() => setToken(false)}>Log out</button></div>
+                    </div>
+                );
+            }
+
+
+            // карточка курса
+            const Course = ({courseData, setCourses, token}) => {
+                const {name, description, content} = courseData;
+
+                const deleteCourseHandler = () => {
+                    deleteCourse(name, setCourses, token);
+                };
+                return (
+                    <div className="course">
+
+                        <div className="course__name">
+                            {name}
+                        </div>
+                        <div className="course__description">
+                            <div>{description}</div>
+                            <button className="header__logout course__delete-btn" onClick={deleteCourseHandler}>Delete</button>
+                        </div>
+                        <div className="course__content">
+                            {content}
+                        </div>
+                    </div>
+                )
+            }
+
+
+            // модальное окно
+            const NewCourseModal = ({setIsModalOpen, setCourses, token}) => {
+                const submitHandler = (e) => {
+                    e.preventDefault();
+                    const data = new FormData(e.target);
+                    const name = data.get('name');
+                    const description = data.get('description');
+                    setIsModalOpen(false);
+                    addCourse({name, description}, setCourses, token);
+                }
+                return (<div className="modal">
+                        <div className="modal__background"></div>
+                        <form className="modal__content" onSubmit={submitHandler}>
+                            <label className="auth__label">Name</label>
+                            <input className="auth__input" type="text" placeholder="name" name="name"/>
+                            <label className="auth__label">Description</label>
+                            <input className="auth__input" type="course description" placeholder="description" name="description"/>
+                            <button type="submit" className="auth__input auth_button">Add course</button>
+                            <button type="button" className="auth__input auth_button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                        </form>
+                    </div>);
+            }
+
+
+            // содержания страницы
+            const Content = ({token}) => {
+                const [courses, setCourses] = React.useState([]);
+                const [isModalOpen, setIsModalOpen] = React.useState(false);
+                React.useEffect(() => {
+                    getCourse(setCourses, token);
+                }, []);
+                return (
+                    <div className="content">
+                        {isModalOpen &&
+                            <NewCourseModal
+                                setIsModalOpen={setIsModalOpen}
+                                setCourses={setCourses}
+                                token={token}
+                            />
+                        }
+                        {courses.map(course =>
+                            <Course
+                                key={course.name}
+                                courseData={course}
+                                setCourses={setCourses}
+                                token={token}
+                            />)}
+                        <button type="button" className="auth__input auth_button" onClick={() => setIsModalOpen(true)}>Add course</button>
+                    </div>
+                );
+            }
+
+
+            // компонент приложения
+            const App = () => {
+                const [token, setToken] = React.useState(null);
+                if (!token) {
+                    return (<Auth setToken={setToken} />)
+                }
+                return(<div>
+                        <Header setToken={setToken}/>
+                        <Content token={token}/>
+                    </div>);
+            }
+
+
+            ReactDOM.render(<App />, document.querySelector('#container'));
+        </script>
+    </body>
+</html>
